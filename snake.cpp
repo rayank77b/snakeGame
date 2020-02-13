@@ -1,4 +1,5 @@
 #include "snake.h"
+#include "game.h"
 
 #define K_UP 1
 #define K_DOWN 2
@@ -39,6 +40,13 @@ void Snake::move()
             setPos(x(), y()-50);
         } else {  // ( direction == K_DOWN )
             setPos(x(), y()+50);
+        }
+    }
+    // test snake for border collision
+    if ( moving ) {
+        if ( (x()<0) || (x()>=X_MAX) || (y()<0) || (y()>=Y_MAX) ) {
+             moving=false;
+             emit collisionDetected();
         }
     }
 }

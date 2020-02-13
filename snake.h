@@ -18,6 +18,8 @@ public:
 
 public slots:
     void move();
+signals:
+    void collisionDetected();
 };
 
 #endif // SNAKE_H
