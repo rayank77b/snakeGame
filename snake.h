@@ -12,6 +12,7 @@ class Snake : public QObject, public QGraphicsPixmapItem
 private:
     bool moving;
     int direction;
+    unsigned int snake_max_pix = 25;
 public:
     Snake(QGraphicsPixmapItem *parent=0);
     void keyPressEvent(QKeyEvent *event);

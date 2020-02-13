@@ -33,13 +33,13 @@ void Snake::move()
 {
     if ( moving ) {
         if ( direction == K_LEFT ) {
-            setPos(x()-50, y());
+            setPos(x()-snake_max_pix, y());
         } else if ( direction == K_RIGHT ) {
-            setPos(x()+50, y());
+            setPos(x()+snake_max_pix, y());
         } else if ( direction == K_UP ) {
-            setPos(x(), y()-50);
+            setPos(x(), y()-snake_max_pix);
         } else {  // ( direction == K_DOWN )
-            setPos(x(), y()+50);
+            setPos(x(), y()+snake_max_pix);
         }
     }
     // test snake for border collision
