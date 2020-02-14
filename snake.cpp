@@ -32,13 +32,17 @@ void Snake::setBody(QList<SnakeBody*> &b)
 void Snake::keyPressEvent(QKeyEvent *event)
 {
     if ( event->key() == Qt::Key_Left ) {
-        direction = K_LEFT;
+        if ( last_direction != K_RIGHT)
+            direction = K_LEFT;
     } else if ( event->key() == Qt::Key_Right ) {
-        direction = K_RIGHT;
+        if ( last_direction != K_LEFT)
+            direction = K_RIGHT;
     } else if ( event->key() == Qt::Key_Up ) {
-        direction = K_UP;
+        if ( last_direction != K_DOWN)
+            direction = K_UP;
     } else if ( event->key() == Qt::Key_Down ) {
-        direction = K_DOWN;
+        if ( last_direction != K_UP)
+            direction = K_DOWN;
     } else if ( event->key() == Qt::Key_Space ) {
         moving = !moving;
     }
@@ -47,8 +51,20 @@ void Snake::keyPressEvent(QKeyEvent *event)
 void Snake::move()
 {
     if ( moving ) {
+
+        // test for colliding of head to body
+        QList<QGraphicsItem *> colliding_items = collidingItems();
+        for( auto &el : colliding_items) {
+            if ( typeid(*el) == typeid(SnakeBody)) {
+                moving=false;
+                emit collisionDetected();
+                return;
+            }
+        }
+
         last_x = x();
         last_y = y();
+        last_direction = direction;
         // bewege den kopf
         if ( direction == K_LEFT ) {
             setPos(x()-snake_max_pix, y());
@@ -68,9 +84,8 @@ void Snake::move()
             blast->setY(last_y);
             body.prepend(blast);
         }
-    }
-    // test snake for border collision
-    if ( moving ) {
+
+        // test snake for border collision
         if ( (x()<0) || (x()>=X_MAX) || (y()<0) || (y()>=Y_MAX) ) {
              moving=false;
              emit collisionDetected();

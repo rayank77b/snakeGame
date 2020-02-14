@@ -30,6 +30,13 @@ Game::Game(QWidget *parent)
     sb = new SnakeBody(X_MAX/2+2*SnakeBody::snake_max_pix,Y_MAX/2);
     scene->addItem(sb);
     body.append(sb);
+    sb = new SnakeBody(X_MAX/2+3*SnakeBody::snake_max_pix,Y_MAX/2);
+    scene->addItem(sb);
+    body.append(sb);
+    sb = new SnakeBody(X_MAX/2+4*SnakeBody::snake_max_pix,Y_MAX/2);
+    scene->addItem(sb);
+    body.append(sb);
+
     snake->setBody(body);
 
     // set snake moving

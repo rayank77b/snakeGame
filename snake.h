@@ -14,7 +14,8 @@ class Snake : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 private:
     bool moving;
-    int direction;
+    unsigned int direction;
+    unsigned int last_direction;
     unsigned int begin_x;
     unsigned int begin_y;
     unsigned int snake_max_pix = 25;
