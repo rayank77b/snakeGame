@@ -5,6 +5,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+#include <QList>
+
+#include "snakebody.h"
 
 class Snake : public QObject, public QGraphicsPixmapItem
 {
@@ -12,9 +15,19 @@ class Snake : public QObject, public QGraphicsPixmapItem
 private:
     bool moving;
     int direction;
+    unsigned int begin_x;
+    unsigned int begin_y;
     unsigned int snake_max_pix = 25;
+
+    QList<SnakeBody*> body;
+
 public:
-    Snake(QGraphicsPixmapItem *parent=0);
+    qreal last_x;
+    qreal last_y;
+
+public:
+    Snake(const unsigned int x, const unsigned int y, QGraphicsPixmapItem *parent=0);
+    void setBody(QList<SnakeBody*> &b);
     void keyPressEvent(QKeyEvent *event);
 
 public slots:

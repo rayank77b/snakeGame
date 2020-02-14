@@ -1,4 +1,7 @@
 #include "snake.h"
+
+#include <QDebug>
+#include <iostream>
 #include "game.h"
 
 #define K_UP 1
@@ -6,12 +9,24 @@
 #define K_RIGHT 3
 #define K_LEFT 4
 
-Snake::Snake(QGraphicsPixmapItem *parent)
-    : QObject(), QGraphicsPixmapItem(parent)
+Snake::Snake(const unsigned int x, const unsigned int y, QGraphicsPixmapItem *parent)
+    : QObject()
+    , QGraphicsPixmapItem(parent)
+    , begin_x{x}
+    , begin_y{y}
 {
     setPixmap(QPixmap(":/images/snake.png"));
     moving = true;
     direction = K_LEFT;
+    setPos(x, y);
+    // make the player focusable and set it to be the current focus
+    setFlag(QGraphicsItem::ItemIsFocusable);
+    setFocus();
+}
+
+void Snake::setBody(QList<SnakeBody*> &b)
+{
+    body = b;
 }
 
 void Snake::keyPressEvent(QKeyEvent *event)
@@ -32,6 +47,9 @@ void Snake::keyPressEvent(QKeyEvent *event)
 void Snake::move()
 {
     if ( moving ) {
+        last_x = x();
+        last_y = y();
+        // bewege den kopf
         if ( direction == K_LEFT ) {
             setPos(x()-snake_max_pix, y());
         } else if ( direction == K_RIGHT ) {
@@ -40,6 +58,15 @@ void Snake::move()
             setPos(x(), y()-snake_max_pix);
         } else {  // ( direction == K_DOWN )
             setPos(x(), y()+snake_max_pix);
+        }
+        // jetzt muessen wir den snake body auch bewegen.
+        // wir nehmen den letzen und haengen in an letzten platz von kopf
+        if ( !body.isEmpty() )
+        {
+            SnakeBody *blast = body.takeLast();
+            blast->setX(last_x);
+            blast->setY(last_y);
+            body.prepend(blast);
         }
     }
     // test snake for border collision

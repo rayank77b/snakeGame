@@ -20,13 +20,17 @@ Game::Game(QWidget *parent)
     setFixedSize(X_MAX,Y_MAX);
 
     // create the snake
-    snake = new Snake();
-    snake->setPos(X_MAX/2,Y_MAX/2);
-    // make the player focusable and set it to be the current focus
-    snake->setFlag(QGraphicsItem::ItemIsFocusable);
-    snake->setFocus();
+    snake = new Snake(X_MAX/2,Y_MAX/2);
     // add the player to the scene
     scene->addItem(snake);
+    // build snake body
+    SnakeBody *sb = new SnakeBody(X_MAX/2+SnakeBody::snake_max_pix,Y_MAX/2);
+    scene->addItem(sb);
+    body.append(sb);
+    sb = new SnakeBody(X_MAX/2+2*SnakeBody::snake_max_pix,Y_MAX/2);
+    scene->addItem(sb);
+    body.append(sb);
+    snake->setBody(body);
 
     // set snake moving
     gameTimer = new QTimer();

@@ -18,11 +18,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     game.cpp \
     main.cpp \
-    snake.cpp
+    snake.cpp \
+    snakebody.cpp
 
 HEADERS += \
     game.h \
-    snake.h
+    snake.h \
+    snakebody.h
 
 FORMS +=
 

@@ -4,11 +4,12 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTimer>
-#include <QTimer>
 #include <QGraphicsTextItem>
+#include <QGraphicsPixmapItem>
 #include <QFont>
 
 #include "snake.h"
+#include "snakebody.h"
 
 const int X_MAX = 1000;
 const int Y_MAX = 800;
@@ -19,6 +20,8 @@ class Game : public QGraphicsView
 public:
     QGraphicsScene *scene;
     Snake *snake;
+    QList<SnakeBody*> body;
+
     QGraphicsTextItem *txtGameOver;
     QTimer *gameTimer;
 
