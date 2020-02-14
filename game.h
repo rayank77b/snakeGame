@@ -10,6 +10,7 @@
 
 #include "snake.h"
 #include "snakebody.h"
+#include "apple.h"
 
 const int X_MAX = 1000;
 const int Y_MAX = 800;
@@ -21,6 +22,7 @@ public:
     QGraphicsScene *scene;
     Snake *snake;
     QList<SnakeBody*> body;
+    Apple *apple;
 
     QGraphicsTextItem *txtGameOver;
     QTimer *gameTimer;

@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QGraphicsTextItem>
 #include <QFont>
+#include <QRandomGenerator>
 
 Game::Game(QWidget *parent)
 {
@@ -38,6 +39,15 @@ Game::Game(QWidget *parent)
     body.append(sb);
 
     snake->setBody(body);
+
+    // generate Apple
+    QRandomGenerator generator;
+    unsigned int rx = static_cast<unsigned int>(generator.bounded(0,X_MAX/25));
+    unsigned int ry = static_cast<unsigned int>(generator.bounded(0,Y_MAX/25));
+
+    apple = new Apple(rx*25,ry*25);
+    scene->addItem(apple);
+
 
     // set snake moving
     gameTimer = new QTimer();
