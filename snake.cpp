@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <iostream>
 #include "game.h"
+#include "apple.h"
 
 #define K_UP 1
 #define K_DOWN 2
@@ -24,9 +25,9 @@ Snake::Snake(const unsigned int x, const unsigned int y, QGraphicsPixmapItem *pa
     setFocus();
 }
 
-void Snake::setBody(QList<SnakeBody*> &b)
+void Snake::add(SnakeBody* b)
 {
-    body = b;
+    body.append(b);
 }
 
 void Snake::keyPressEvent(QKeyEvent *event)
@@ -52,15 +53,25 @@ void Snake::move()
 {
     if ( moving ) {
 
-        // test for colliding of head to body
+        // test for colliding of head to body or eat apple
         QList<QGraphicsItem *> colliding_items = collidingItems();
         for( auto &el : colliding_items) {
-            if ( typeid(*el) == typeid(SnakeBody)) {
+            // colliding with body
+            if ( typeid(*el) == typeid(SnakeBody))
+            {
                 moving=false;
                 emit collisionDetected();
                 return;
             }
+            // snake eat apple
+            if (typeid(*el) == typeid(Apple))
+            {
+                emit eatApple();
+
+            }
         }
+
+
 
         last_x = x();
         last_y = y();

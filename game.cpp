@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QGraphicsTextItem>
 #include <QFont>
-#include <QRandomGenerator>
+#include <time.h>
 
 Game::Game(QWidget *parent)
 {
@@ -27,25 +27,21 @@ Game::Game(QWidget *parent)
     // build snake body
     SnakeBody *sb = new SnakeBody(X_MAX/2+SnakeBody::snake_max_pix,Y_MAX/2);
     scene->addItem(sb);
-    body.append(sb);
+    snake->add(sb);
     sb = new SnakeBody(X_MAX/2+2*SnakeBody::snake_max_pix,Y_MAX/2);
     scene->addItem(sb);
-    body.append(sb);
+    snake->add(sb);
     sb = new SnakeBody(X_MAX/2+3*SnakeBody::snake_max_pix,Y_MAX/2);
     scene->addItem(sb);
-    body.append(sb);
-    sb = new SnakeBody(X_MAX/2+4*SnakeBody::snake_max_pix,Y_MAX/2);
-    scene->addItem(sb);
-    body.append(sb);
-
-    snake->setBody(body);
+    snake->add(sb);
 
     // generate Apple
-    QRandomGenerator generator;
-    unsigned int rx = static_cast<unsigned int>(generator.bounded(0,X_MAX/25));
-    unsigned int ry = static_cast<unsigned int>(generator.bounded(0,Y_MAX/25));
+    generator = new QRandomGenerator();
+    generator->seed(time(NULL));
+    unsigned int rx = static_cast<unsigned int>(25*generator->bounded(0,X_MAX/25));
+    unsigned int ry = static_cast<unsigned int>(25*generator->bounded(0,Y_MAX/25));
 
-    apple = new Apple(rx*25,ry*25);
+    apple = new Apple(rx,ry);
     scene->addItem(apple);
 
 
@@ -61,6 +57,7 @@ Game::Game(QWidget *parent)
     txtGameOver->setPos(400,400);
 
     QObject::connect(snake, SIGNAL(collisionDetected()), this, SLOT(snakeCollision()));
+    QObject::connect(snake, SIGNAL(eatApple()), this, SLOT(appleEated()));
 
     show();
 }
@@ -69,4 +66,38 @@ void Game::snakeCollision()
 {
     scene->addItem(txtGameOver);
     gameTimer->stop();
+}
+
+void Game::appleEated()
+{
+    unsigned int rx;
+    unsigned int ry;
+    bool apple_colliding = false;
+
+    do
+    {
+        apple_colliding = false;
+        rx = static_cast<unsigned int>(25*generator->bounded(0,X_MAX/25));
+        ry = static_cast<unsigned int>(25*generator->bounded(0,Y_MAX/25));
+        apple->setX(rx);
+        apple->setY(ry);
+
+        QList<QGraphicsItem *> colliding_items = apple->collidingItems();
+        for( auto &el : colliding_items) {
+            // colliding with body
+            if ( (typeid(*el) == typeid(SnakeBody)) || (typeid(*el) == typeid(Snake)) )
+            {
+                apple_colliding = true;
+            }
+        }
+    } while(apple_colliding);
+
+    SnakeBody *sb;
+    for (unsigned int i=0; i<snake_grow; i++)
+    {
+        sb = new SnakeBody(snake->last_x, snake->last_y);
+        scene->addItem(sb);
+        snake->add(sb);
+    }
+    snake_grow = snake_grow + 3;
 }

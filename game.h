@@ -7,6 +7,7 @@
 #include <QGraphicsTextItem>
 #include <QGraphicsPixmapItem>
 #include <QFont>
+#include <QRandomGenerator>
 
 #include "snake.h"
 #include "snakebody.h"
@@ -18,19 +19,22 @@ const int Y_MAX = 800;
 class Game : public QGraphicsView
 {
     Q_OBJECT
+private:
+    unsigned int snake_grow = 3;
 public:
     QGraphicsScene *scene;
     Snake *snake;
-    QList<SnakeBody*> body;
     Apple *apple;
 
     QGraphicsTextItem *txtGameOver;
     QTimer *gameTimer;
+    QRandomGenerator *generator;
 
     Game(QWidget * parent=0);
 
 public slots:
     void snakeCollision();
+    void appleEated();
 };
 
 #endif // GAME_H

@@ -28,13 +28,14 @@ public:
 
 public:
     Snake(const unsigned int x, const unsigned int y, QGraphicsPixmapItem *parent=0);
-    void setBody(QList<SnakeBody*> &b);
+    void add(SnakeBody *b);
     void keyPressEvent(QKeyEvent *event);
 
 public slots:
     void move();
 signals:
     void collisionDetected();
+    void eatApple();
 };
 
 #endif // SNAKE_H
