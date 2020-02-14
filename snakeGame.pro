@@ -19,12 +19,14 @@ SOURCES += \
     apple.cpp \
     game.cpp \
     main.cpp \
+    score.cpp \
     snake.cpp \
     snakebody.cpp
 
 HEADERS += \
     apple.h \
     game.h \
+    score.h \
     snake.h \
     snakebody.h
 

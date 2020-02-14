@@ -20,6 +20,14 @@ Game::Game(QWidget *parent)
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(X_MAX,Y_MAX);
 
+    // generate Apple
+    generator = new QRandomGenerator();
+    generator->seed(time(NULL));
+    unsigned int rx = static_cast<unsigned int>(25*generator->bounded(0,X_MAX/25));
+    unsigned int ry = static_cast<unsigned int>(25*generator->bounded(0,Y_MAX/25));
+    apple = new Apple(rx,ry);
+    scene->addItem(apple);
+
     // create the snake
     snake = new Snake(X_MAX/2,Y_MAX/2);
     // add the player to the scene
@@ -35,20 +43,14 @@ Game::Game(QWidget *parent)
     scene->addItem(sb);
     snake->add(sb);
 
-    // generate Apple
-    generator = new QRandomGenerator();
-    generator->seed(time(NULL));
-    unsigned int rx = static_cast<unsigned int>(25*generator->bounded(0,X_MAX/25));
-    unsigned int ry = static_cast<unsigned int>(25*generator->bounded(0,Y_MAX/25));
-
-    apple = new Apple(rx,ry);
-    scene->addItem(apple);
-
+    // create the score
+    score = new Score();
+    scene->addItem(score);
 
     // set snake moving
     gameTimer = new QTimer();
     QObject::connect(gameTimer, SIGNAL(timeout()), snake, SLOT(move()));
-    gameTimer->start(300);  // ms
+    gameTimer->start(game_period_ms);  // ms
 
     // Game Over Text
     txtGameOver = new QGraphicsTextItem("GAME OVER");
@@ -73,6 +75,8 @@ void Game::appleEated()
     unsigned int rx;
     unsigned int ry;
     bool apple_colliding = false;
+
+    score->increase();
 
     do
     {
@@ -100,4 +104,6 @@ void Game::appleEated()
         snake->add(sb);
     }
     snake_grow = snake_grow + 3;
+    game_period_ms = game_period_ms - 3;
+    gameTimer->setInterval(game_period_ms);
 }
